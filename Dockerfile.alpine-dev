@@ -1,0 +1,32 @@
+# 基础镜像
+FROM alpine:latest
+
+# 作者信息
+# 注：这里重点参考了：https://www.cnblogs.com/zhujingzhi/p/9742085.html
+MAINTAINER Tiger Chan "tiger7chan@gmail.com"
+
+# 修改源
+RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories && \
+    echo "http://mirrors.aliyun.com/alpine/latest-stable/community/" >> /etc/apk/repositories
+
+# 安装需要的软件
+RUN apk update \
+    # ca-certificates访问https时需要
+    && apk add --no-cache ca-certificates curl git \
+    # 下面是编译需要的开发环境
+    && apk add --no-cache --virtual .build-deps \
+        gcc \
+        libc-dev \
+        g++ \
+        gdb \
+        make \
+        cmake \
+        openssl-dev \
+        pcre-dev \
+        zlib-dev \
+        linux-headers \
+        libxslt-dev \
+        gd-dev \
+        geoip-dev \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
