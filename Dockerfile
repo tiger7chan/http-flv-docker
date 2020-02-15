@@ -87,6 +87,7 @@ RUN CONFIG="\
     # 保存到文件，给打包阶段使用
     && echo $runDeps >> $NGINX_PATH/nginx.depends
 
+
 # 打包阶段
 # 基础镜像
 FROM alpine:latest AS nginx-flv
@@ -97,16 +98,18 @@ MAINTAINER Tiger Chan "tiger7chan@gmail.com"
 
 # 指定nginx的位置
 ARG NGINX_PATH=/usr/local/nginx
-ENV NGINX_CONF /usr/local/nginx/conf
+
+# 定义一个环境变量，方便后面运行时可以进行替换
+ENV NGINX_CONF /usr/local/nginx/conf/nginx.conf
 
 # 从build中拷贝编译好的文件
 COPY --from=Builder $NGINX_PATH $NGINX_PATH
 # 下面链接stderr和stdout需要的文件
 COPY --from=Builder /var/log/nginx /var/log/nginx
 
-# 将目录下的文件copy到镜像中
-COPY nginx.conf $NGINX_CONF/nginx.conf
-COPY rtmp.conf $NGINX_CONF/rtmp.conf
+# 将目录下的文件copy到镜像中(默认的配置文件)
+COPY nginx.conf $NGINX_CONF
+COPY rtmp.conf $NGINX_PATH/conf/rtmp.conf
 
 # 修改源及添加用户
 RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories \
@@ -130,7 +133,7 @@ RUN apk update \
 
 
 # 将启动命令搞成个脚本通过脚本启动
-# RUN echo "/usr/local/nginx/sbin/nginx" >> /etc/start.sh \
+# RUN echo "/usr/local/nginx/sbin/nginx -g 'daemon off;' -c $NGINX_CONF" >> /etc/start.sh \
 #    && chmod +x /etc/start.sh
 
 # 开放80和1935端口
@@ -141,4 +144,4 @@ EXPOSE 1935
 STOPSIGNAL SIGTERM
 
 # 启动nginx命令
-CMD ["/bin/sh", "-c", "/usr/local/nginx/sbin/nginx", "-c", "$NGINX_CONF/nginx.conf"]
+CMD ["/bin/sh", "/etc/start.sh"]
