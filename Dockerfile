@@ -141,4 +141,4 @@ EXPOSE 1935
 STOPSIGNAL SIGTERM
 
 # 启动nginx命令
-CMD ["/usr/local/nginx/sbin/nginx", "-c", "$NGINX_CONF/nginx.conf", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "/usr/local/nginx/sbin/nginx", "-c", "$NGINX_CONF/nginx.conf", "-g", "daemon off;"]
