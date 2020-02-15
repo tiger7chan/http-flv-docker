@@ -9,8 +9,8 @@ MAINTAINER Tiger Chan "tiger7chan@gmail.com"
 ARG NGINX_VERSION=1.17.8
 
 # 指定nginx的位置
-ENV NGINX_PATH /usr/local/nginx
-ENV NGINX_CONF /usr/local/nginx/conf
+ARG NGINX_PATH=/usr/local/nginx
+ARG NGINX_CONF=/usr/local/nginx/conf
 
 # 编译安装nginx
 RUN CONFIG="\
@@ -96,8 +96,8 @@ FROM alpine:latest AS nginx-flv
 MAINTAINER Tiger Chan "tiger7chan@gmail.com"
 
 # 指定nginx的位置
-ENV NGINX_PATH /usr/local/nginx
-ENV NGINX_CONF /usr/local/nginx
+ARG NGINX_PATH=/usr/local/nginx
+ENV NGINX_CONF /usr/local/nginx/conf
 
 # 从build中拷贝编译好的文件
 COPY --from=Builder $NGINX_PATH $NGINX_PATH
@@ -105,8 +105,8 @@ COPY --from=Builder $NGINX_PATH $NGINX_PATH
 COPY --from=Builder /var/log/nginx /var/log/nginx
 
 # 将目录下的文件copy到镜像中
-COPY nginx.conf $NGINX_CONF/conf/nginx.conf
-COPY rtmp.conf $NGINX_CONF/conf/rtmp.conf
+COPY nginx.conf $NGINX_CONF/nginx.conf
+COPY rtmp.conf $NGINX_CONF/rtmp.conf
 
 # 修改源及添加用户
 RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories \
@@ -130,8 +130,8 @@ RUN apk update \
 
 
 # 将启动命令搞成个脚本通过脚本启动
-RUN echo "/usr/local/nginx/sbin/nginx" >> /etc/start.sh \
-    && chmod +x /etc/start.sh
+# RUN echo "/usr/local/nginx/sbin/nginx" >> /etc/start.sh \
+#    && chmod +x /etc/start.sh
 
 # 开放80和1935端口
 EXPOSE 80
@@ -141,4 +141,4 @@ EXPOSE 1935
 STOPSIGNAL SIGTERM
 
 # 启动nginx命令
-CMD ["/bin/sh","/etc/start.sh"]
+CMD ["/usr/local/nginx/sbin/nginx", "-f", "$NGINX_CONF/nginx.conf", "-g", "daemon off;"]
