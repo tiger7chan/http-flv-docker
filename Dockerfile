@@ -110,6 +110,8 @@ COPY --from=Builder /var/log/nginx /var/log/nginx
 # 将目录下的文件copy到镜像中(默认的配置文件)
 COPY nginx.conf $NGINX_CONF
 COPY rtmp.conf $NGINX_PATH/conf/rtmp.conf
+# 拷贝启动命令
+COPY start.sh /etc/start.sh
 
 # 修改源及添加用户
 RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories \
@@ -126,14 +128,10 @@ RUN apk update \
     # 通过上面查找nginx运行需要的库
     && apk add --no-cache --virtual .nginx-rundeps $runDeps \
     # 移动html文件到/var/www,这是和nginx.conf保持一直
-    && mv $NGINX_PATH/html /var/www 
+    && mv $NGINX_PATH/html /var/www \ 
     # forward request and error logs to docker log collector
     #&& ln -sf /dev/stdout /var/log/nginx/access.log \
-    #&& ln -sf /dev/stderr /var/log/nginx/error.log
-
-
-# 将启动命令搞成个脚本通过脚本启动
-RUN echo "/usr/local/nginx/sbin/nginx -g 'daemon off;' -c '$NGINX_CONF'" >> /etc/start.sh \
+    #&& ln -sf /dev/stderr /var/log/nginx/error.log \
     && chmod +x /etc/start.sh
 
 # 开放80和1935端口
