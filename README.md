@@ -2,7 +2,9 @@
 
 基于Apline镜像、nginx-http-flv-module模块制作的docker镜像，优点主要是控制了大小，目前制作好的镜像只有16M。
 
-Nginx-http-flv-module版本为1.2.7，nginx的版本为1.17.8。
+Nginx-http-flv-module版本为1.2.7，https://github.com/winshining/nginx-http-flv-module，感谢作者[winshining](https://github.com/winshining)。
+
+Nginx的版本为1.17.8。
 
 本文主要参考了https://www.cnblogs.com/zhujingzhi/p/9742085.html，感谢作者！！
 
@@ -128,17 +130,16 @@ RUN apk update \
 -v /opt/nginx-http-flv/:/etc/nginx -v /opt/nginx-http-flv/log/:/var/log/nginx/
 ```
 
-这里挂在了2个，一个是我们的配置文件，因为前面环境变量指定了/etc/nginx路径，所以把我们本地/opt/nginx-http-flv/的配置文件挂在进去；
+这里挂载了2个，一个是我们的配置文件，因为前面环境变量指定了/etc/nginx路径，所以把我们本地/opt/nginx-http-flv/的配置文件挂载进去；
 
-另一是挂在nginx在运行时的日志路径，这样我们就可以不用进入容器，直接在本机的/opt/nginx-http-flv/log/位置就可以读取到日志内容。
+另一是挂载nginx在运行时的日志路径，这样我们就可以不用进入容器，直接在本机的/opt/nginx-http-flv/log/位置就可以读取到日志内容。
 
 ### 运行截图
 
 #### 成功运行
 
-![run](./img/run.jpeg)
+ ![image](https://github.com/tiger7chan/http-flv-docker/raw/master/img/run.jpeg)
 
 #### 推流和拉流成功
 
-![run2](./img/run2.jpeg)
-
+ ![image](https://github.com/tiger7chan/http-flv-docker/raw/master/img/run2.jpeg)
