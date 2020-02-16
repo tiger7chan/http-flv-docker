@@ -133,7 +133,7 @@ RUN apk update \
 
 
 # 将启动命令搞成个脚本通过脚本启动
-RUN echo "/usr/local/nginx/sbin/nginx -g 'daemon off;' -c $NGINX_CONF" >> /etc/start.sh \
+RUN echo "/usr/local/nginx/sbin/nginx -g 'daemon off;' -c '$NGINX_CONF'" >> /etc/start.sh \
     && chmod +x /etc/start.sh
 
 # 开放80和1935端口
