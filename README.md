@@ -1,12 +1,12 @@
 # http-flv-docker
 
-基于Apline镜像、nginx-http-flv-module模块制作的docker镜像，优点主要是控制了大小，目前制作好的镜像只有16M。
+基于Apline镜像、nginx-http-flv-module模块制作的docker镜像，优点主要是控制了大小，目前制作好的镜像只有10M左右。
 
 Nginx-http-flv-module版本为1.2.7，https://github.com/winshining/nginx-http-flv-module，感谢作者[winshining](https://github.com/winshining)。
 
 Nginx的版本为1.17.8。
 
-本文主要参考了https://www.cnblogs.com/zhujingzhi/p/9742085.html，感谢作者！！
+本文制作方法主要参考了https://www.cnblogs.com/zhujingzhi/p/9742085.html，感谢作者！！
 
 ### Dockerfile说明
 
